@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 180" width="100%" height="100%">
+  <defs>
+    <!-- Phosphor CRT Glow -->
+    <filter id="matrix-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Chromatic Aberration: slight RGB split -->
+    <filter id="chroma" x="-10%" y="-10%" width="120%" height="120%">
+      <feOffset in="SourceGraphic" dx="1" dy="0" result="red">
+        <animate attributeName="dx" values="1;1.5;1;0.5;1" dur="0.15s" repeatCount="indefinite" />
+      </feOffset>
+      <feOffset in="SourceGraphic" dx="-1" dy="0" result="cyan">
+        <animate attributeName="dx" values="-1;-1.5;-1;-0.5;-1" dur="0.15s" repeatCount="indefinite" />
+      </feOffset>
+      <feColorMatrix in="red" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="redOnly"/>
+      <feColorMatrix in="cyan" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="cyanOnly"/>
+      <feBlend in="redOnly" in2="cyanOnly" mode="screen" result="split"/>
+      <feBlend in="SourceGraphic" in2="split" mode="screen"/>
+    </filter>
+
+    <!-- Scanlines pattern -->
+    <pattern id="scanlines" x="0" y="0" width="1" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="1" height="2" fill="#000" fill-opacity="0.25"/>
+    </pattern>
+
+    <!-- Screen flicker overlay -->
+    <filter id="flicker">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" result="noise"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.03 0" in="noise" result="dimNoise"/>
+      <feBlend in="SourceGraphic" in2="dimNoise" mode="multiply"/>
+    </filter>
+
+    <!-- Vignette radial gradient -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.6"/>
+    </radialGradient>
+
+    <style>
+      .ascii-main {
+        font-family: 'Courier New', 'Courier', 'SF Mono', monospace;
+        font-size: 15px;
+        font-weight: 900;
+        fill: #00ff66;
+        white-space: pre;
+      }
+      .badge-text {
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        font-weight: bold;
+        fill: #00ff66;
+      }
+      .cursor {
+        animation: blink 1s step-start infinite;
+      }
+      @keyframes blink {
+        50% { opacity: 0; }
+      }
+      .flicker-text {
+        animation: textFlicker 4s infinite;
+      }
+      @keyframes textFlicker {
+        0%, 100% { opacity: 1; }
+        92% { opacity: 1; }
+        93% { opacity: 0.85; }
+        94% { opacity: 1; }
+        96% { opacity: 0.9; }
+        97% { opacity: 1; }
+      }
+    </style>
+  </defs>
+
+  <!-- Pure black background -->
+  <rect width="540" height="180" fill="#000000" />
+
+  <!-- Center-aligned container group -->
+  <g transform="translate(45, 20)">
+    <!-- ASCII Art Text: "SCRIBE" with chroma + glow + flicker -->
+    <g filter="url(#matrix-glow)">
+      <text x="0" y="24" class="ascii-main flicker-text" filter="url(#chroma)">
+        <tspan x="0" dy="0"> ____   ____ ____  ___ ____  _____ </tspan>
+        <tspan x="0" dy="16">/ ___| / ___|  _ \|_ _| __ )| ____|</tspan>
+        <tspan x="0" dy="16">\___ \| |   | |_) || ||  _ \|  _|  </tspan>
+        <tspan x="0" dy="16"> ___) | |___|  _ &lt; | || |_) | |___ </tspan>
+        <tspan x="0" dy="16">|____/ \____|_| \_\___|____/|_____|</tspan>
+      </text>
+    </g>
+
+    <!-- Center-aligned CLI Badge & Cursor Row -->
+    <g transform="translate(197, 112)">
+      <rect x="0" y="0" width="46" height="20" rx="4" fill="#00ff66" fill-opacity="0.12" stroke="#00ff66" stroke-width="1"/>
+      <text x="23" y="14" class="badge-text" text-anchor="middle">CLI</text>
+      <rect x="54" y="2" width="10" height="16" fill="#00ff66" class="cursor" filter="url(#matrix-glow)"/>
+    </g>
+  </g>
+
+  <!-- Scanlines overlay (full screen) -->
+  <rect width="540" height="180" fill="url(#scanlines)" pointer-events="none"/>
+
+  <!-- Vignette darkening at edges -->
+  <rect width="540" height="180" fill="url(#vignette)" pointer-events="none"/>
+
+  <!-- Subtle screen flicker noise overlay -->
+  <rect width="540" height="180" fill="transparent" filter="url(#flicker)" pointer-events="none" opacity="0.5">
+    <animate attributeName="opacity" values="0.3;0.6;0.3;0.5;0.3" dur="0.2s" repeatCount="indefinite"/>
+  </rect>
+</svg>

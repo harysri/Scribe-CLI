@@ -1,0 +1,40 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local config (contains user-specific paths)
+config.yaml
+
+# AutoHotkey script (user-specific paths)
+writing-assistant-hotkeys.ahk
+
+# Logs
+*.log
+local-writing-assistant/
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Environment variables
+.env

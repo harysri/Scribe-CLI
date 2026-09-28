@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "local-writing-assistant"
+version = "1.0.0"
+description = "A lightweight, fully local CLI AI writing assistant powered by Ollama"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Local AI Tools"}
+]
+keywords = ["ollama", "cli", "writing", "grammar", "ai", "local-llm"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "typer>=0.12.0",
+    "rich>=13.0.0",
+    "pyperclip>=1.8.0",
+    "pyyaml>=6.0",
+    "httpx>=0.27.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.4.0",
+    "pytest>=8.0.0",
+]
+
+[project.scripts]
+write = "writing_assistant.cli:app"
+wa = "writing_assistant.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/local-ai/writing-assistant"
+Repository = "https://github.com/local-ai/writing-assistant"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/writing_assistant"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
