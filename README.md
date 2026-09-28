@@ -215,6 +215,95 @@ To run the hotkey script automatically on Windows startup:
 1. Press `Win + R`, type `shell:startup`, press Enter
 2. Create a shortcut to `writing-assistant-hotkeys.ahk` in the Startup folder
 
+### Core Script Logic
+
+The following shows the key functions that power the hotkey workflow:
+
+**Argument quoting for Windows command line:**
+
+```autohotkey
+QuoteArg(arg) {
+    return '"' StrReplace(arg, '"', '\"') '"'
+}
+```
+
+**Main workflow — copy, process, paste:**
+
+```autohotkey
+RunAndPaste(args*) {
+    oldClip := A_Clipboard
+    A_Clipboard := ""
+
+    Send "^c"
+    Sleep 300
+
+    if (A_Clipboard = "") {
+        ToolTip "No text selected!"
+        Sleep 1500
+        ToolTip
+        A_Clipboard := oldClip
+        return
+    }
+
+    ; Build command: write.exe [subcommand] [options] --from-clipboard --to-clipboard --no-stats
+    cmd := QuoteArg(WriteExe)
+    for a in args
+        cmd .= " " . QuoteArg(a)
+    cmd .= " --from-clipboard --to-clipboard --no-stats"
+
+    try {
+        RunWait(cmd, WaDir, "Hide")
+    } catch Error as e {
+        ToolTip "Error: " e.Message
+        Sleep 2000
+        ToolTip
+        A_Clipboard := oldClip
+        return
+    }
+
+    if (A_Clipboard = "") {
+        ToolTip "No response from assistant."
+        Sleep 2000
+        ToolTip
+        A_Clipboard := oldClip
+        return
+    }
+
+    Send "^v"
+    Sleep 100
+
+    ; Restore original clipboard after 5 seconds
+    SetTimer(() => A_Clipboard := oldClip, -5000)
+}
+```
+
+**Hotkey definitions:**
+
+```autohotkey
+^+g:: RunAndPaste("correct")                    ; Ctrl+Shift+G
+^+c:: RunAndPaste("correct")                    ; Ctrl+Shift+C (copy only)
+^!i:: RunAndPaste("improve")                    ; Ctrl+Alt+I
+^!r:: RunAndPaste("rewrite", "--tone", "professional")  ; Ctrl+Alt+R
+^!f:: RunAndPaste("rewrite", "--tone", "formal")        ; Ctrl+Alt+F
+^!s:: RunAndPaste("rewrite", "--tone", "concise")       ; Ctrl+Alt+S
+^!a:: RunAndPaste("rewrite", "--tone", "academic")      ; Ctrl+Alt+A
+```
+
+**System tray menu:**
+
+```autohotkey
+A_TrayMenu.Delete()
+A_TrayMenu.Add("&Correct Grammar", (*) => RunAndPaste("correct"))
+A_TrayMenu.Add("&Improve Text", (*) => RunAndPaste("improve"))
+A_TrayMenu.Add("Rewrite &Professional", (*) => RunAndPaste("rewrite", "--tone", "professional"))
+A_TrayMenu.Add("Rewrite &Formal", (*) => RunAndPaste("rewrite", "--tone", "formal"))
+A_TrayMenu.Add("Make &Concise", (*) => RunAndPaste("rewrite", "--tone", "concise"))
+A_TrayMenu.Add()
+A_TrayMenu.Add("E&xit", (*) => ExitApp())
+```
+
+---
+
 ## 📁 Project Structure
 
 ```

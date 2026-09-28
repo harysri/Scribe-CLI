@@ -8,7 +8,6 @@ version = "1.0.0"
 description = "A lightweight, fully local CLI AI writing assistant powered by Ollama"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
 authors = [
     {name = "Local AI Tools"}
 ]
@@ -40,9 +39,6 @@ dev = [
     "pytest>=8.0.0",
 ]
 
-[project.scripts]
-write = "writing_assistant.cli:app"
-wa = "writing_assistant.cli:app"
 
 
 [tool.hatch.build.targets.wheel]
