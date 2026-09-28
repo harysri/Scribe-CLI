@@ -44,9 +44,6 @@ dev = [
 write = "writing_assistant.cli:app"
 wa = "writing_assistant.cli:app"
 
-[project.urls]
-Homepage = "https://github.com/local-ai/writing-assistant"
-Repository = "https://github.com/local-ai/writing-assistant"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/writing_assistant"]
